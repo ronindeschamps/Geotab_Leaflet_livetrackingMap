@@ -73,7 +73,8 @@
     <script src="login.js"></script>
 
     <!-- The JavaScript used for the example is present in the same HTML file here -->
-    <script type="text/javascript">var table;
+    <script type="text/javascript">
+            var table;
             var enabled = false;
             var updateInterval = 5; // In seconds
             var update = null;
@@ -180,6 +181,9 @@
                     }
                 }
             }
+
+
+            var map = L.map('map').setView([51.505, -0.09], 13);
 
             function createLocationRow(feedItem) {
                 var row = document.createElement("tr");

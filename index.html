@@ -1,13 +1,132 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+    <link rel="stylesheet" href="/leaflet/leaflet.css" />
+    <script src="/leaflet/leaflet.js"></script>
+
+    <style>
+        #map {
+            height: 100vh;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/mg-api-js"></script>
+</head>
+
+<body>
+
+    <!-- leaflet map -->
+
+    <div id="map">
+
+    </div>
+
+
+    <script type="text/javascript">
+
+        //create authentication object
+
+        const authentication = {
+            credentials: {
+                database: 'demo_test_data',
+                userName: 'ronindeschamps@gmail.com',
+                password: 'Kylesucks@pingpong420'
+            },
+            path: 'preview.geotab.com'
+        }
+
+        //authentication to create the GeotabApi
+
+        const api = new GeotabApi(authentication);
+
+        // Authenticate and log the result
+
+        api.authenticate()
+            .then(response => {
+                console.log('I have authenticated');
+            })
+            .catch(error => {
+                console.error('Authentication failed:', error);
+            });
+
+        // Set up Leaflet map
+
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+
+        var layerGroup = L.layerGroup().addTo(map);
+
+        // Function to pause execution for a given number of milliseconds
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Function to retrieve and display device location
+        async function retrieveAndDisplayDeviceLocation(serial) {
+            try {
+                const result = await api.call("Get", {
+                    typeName: "Device",
+                    search: {
+                        serialNumber: serial
+                    }
+                });
+
+                if (result.length > 0) {
+                    showDeviceLocation(result[0]);
+                } else {
+                    console.error('Error: empty data');
+                }
+            } catch (error) {
+                alert(error);
+            }
+        }
+
+        // Function to show device location on the map
+        function showDeviceLocation(device) {
+            api.call("Get", {
+                typeName: "DeviceStatusInfo",
+                search: {
+                    deviceSearch: {
+                        id: device.id
+                    }
+                }
+            }, function (result) {
+                if (result.length > 0) {
+                    var location = new L.LatLng(result[0].latitude, result[0].longitude);
+                    var marker = L.marker(location).bindPopup(
+                        "<strong>" + device.name + "</strong><br />" +
+                        location.lat + ", " + location.lng);
+
+                    layerGroup.clearLayers().addLayer(marker);
+                    map.setView(location, 15);
+                } else {
+                    alert("Location information not available for the inputted device");
+                }
+            }, function (error) {
+                alert(error);
+            });
+        }
+
+        // Loop to retrieve and display device location every 5 seconds
+        async function loopWithPause() {
+            const serial = "G90000000001";
+            while (true) {
+                await retrieveAndDisplayDeviceLocation(serial);
+                await delay(5000); // Pause for 5 seconds
+            }
+        }
+
+        // Start the loop
+        loopWithPause();
+
+
+    </script>
+</body>
 </html>

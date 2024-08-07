@@ -1,0 +1,15 @@
+{
+  "name": "mg-api-js",
+  "homepage": "https://github.com/Geotab/mg-api-js",
+  "version": "2.1.1",
+  "_release": "2.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.1.1",
+    "commit": "3604b635bc909ac7eaf31bf810407dbffcbd0d94"
+  },
+  "_source": "https://github.com/Geotab/mg-api-js.git",
+  "_target": "^2.1.1",
+  "_originalSource": "mg-api-js",
+  "_direct": true
+}
