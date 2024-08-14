@@ -5,7 +5,7 @@ Date: 08/06/2024
 
 This is an intergration of the GeotabSDK library and the Leaflet Javascript library. 
 The GeotabSDK is used to pull live data from a database that stores information from a Geotab tracker. 
-The Leaflet map is used to display the live location in real time.
+The Leaflet map is used to display the live location of the Geotab device.
 
 - GeotabSDK (https://developers.geotab.com/myGeotab/introduction)
 - Leaflet Library (https://leafletjs.com/)
