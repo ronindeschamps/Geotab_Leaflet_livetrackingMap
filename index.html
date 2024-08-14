@@ -6,13 +6,15 @@
     <link rel="stylesheet" href="/leaflet/leaflet.css" />
     <script src="/leaflet/leaflet.js"></script>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/mg-api-js"></script>
+
+
     <style>
         #map {
             height: 100vh;
         }
     </style>
-
-    <script src="https://cdn.jsdelivr.net/npm/mg-api-js"></script>
 </head>
 
 <body>
@@ -51,25 +53,14 @@
                 console.error('Authentication failed:', error);
             });
 
-        // Set up Leaflet map
+        async function initmap() {
 
-        var map = L.map('map').setView([51.505, -0.09], 13);
+            const serial = "G90000000001";
+            var limoIcon = L.icon({
+                iconUrl: '/images/limo-hero.png',
+                iconSize: [116.5, 55.8],
+            });
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-
-
-        var layerGroup = L.layerGroup().addTo(map);
-
-        // Function to pause execution for a given number of milliseconds
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        // Function to retrieve and display device location
-        async function retrieveAndDisplayDeviceLocation(serial) {
             try {
                 const result = await api.call("Get", {
                     typeName: "Device",
@@ -79,7 +70,66 @@
                 });
 
                 if (result.length > 0) {
-                    showDeviceLocation(result[0]);
+                    initmaptolocation(result[0], limoIcon);
+                } else {
+                    console.error('Error: empty data');
+                }
+            } catch (error) {
+                alert(error);
+            }
+
+            function initmaptolocation(device, limoIcon) {
+                api.call("Get", {
+                    typeName: "DeviceStatusInfo",
+                    search: {
+                        deviceSearch: {
+                            id: device.id
+                        }
+                    }
+                }, function (result) {
+                    if (result.length > 0) {
+
+                        var location = new L.LatLng(result[0].latitude, result[0].longitude);
+
+                        var map = L.map('map').setView(location, 13);
+
+                        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }).addTo(map);
+
+                        var marker = L.marker(location, { icon: limoIcon }).addTo(map);
+
+                        var layerGroup = L.layerGroup().addTo(map);
+
+                    } else {
+                        alert("Location information not available for the inputted device");
+                    }
+                }, function (error) {
+                    alert(error);
+                });
+            }
+        }
+
+        // Function to pause execution for a given number of milliseconds
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Function to retrieve and display device location
+        async function displayLocationLoop(serial, limoIcon) {
+
+
+            try {
+                const result = await api.call("Get", {
+                    typeName: "Device",
+                    search: {
+                        serialNumber: serial
+                    }
+                });
+
+                if (result.length > 0) {
+                    showDeviceLocation(result[0], limoIcon);
                 } else {
                     console.error('Error: empty data');
                 }
@@ -89,7 +139,7 @@
         }
 
         // Function to show device location on the map
-        function showDeviceLocation(device) {
+        function showDeviceLocation(device, limoIcon) {
             api.call("Get", {
                 typeName: "DeviceStatusInfo",
                 search: {
@@ -99,13 +149,15 @@
                 }
             }, function (result) {
                 if (result.length > 0) {
+
                     var location = new L.LatLng(result[0].latitude, result[0].longitude);
-                    var marker = L.marker(location).bindPopup(
-                        "<strong>" + device.name + "</strong><br />" +
-                        location.lat + ", " + location.lng);
+
+                    var marker = L.marker(location, { icon: limoIcon }).addTo(map);
 
                     layerGroup.clearLayers().addLayer(marker);
+
                     map.setView(location, 15);
+
                 } else {
                     alert("Location information not available for the inputted device");
                 }
@@ -116,12 +168,21 @@
 
         // Loop to retrieve and display device location every 5 seconds
         async function loopWithPause() {
+
             const serial = "G90000000001";
+            var icon = L.icon({
+                iconUrl: '/images/limo-hero.png',
+                iconSize: [116.5, 55.8],
+
+            });
             while (true) {
-                await retrieveAndDisplayDeviceLocation(serial);
+                await displayLocationLoop(serial, icon);
                 await delay(5000); // Pause for 5 seconds
             }
         }
+
+        // initialize map
+        initmap();
 
         // Start the loop
         loopWithPause();

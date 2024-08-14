@@ -1,8 +1,14 @@
-# React + Vite
+
+Author: Ronin Deschamps
+Date: 08/06/2024
+
+This is an intergration of the GeotabSDK library and the Leaflet Javascript library. 
+The GeotabSDK is used to pull live data from a database that stores information from a Geotab tracker. 
+The Leaflet map is used to display the live location in real time.
+
+- GeotabSDK (https://developers.geotab.com/myGeotab/introduction)
+- Leaflet Library (https://leafletjs.com/)
+
+The webpage was made with the Visual Studio "Standalone Javascript React Project" template 
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh

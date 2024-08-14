@@ -1,1 +1,3 @@
 C:\Users\ronin\source\repos\GeoTabTest\obj\Debug\geotabtest.esproj.CoreCompileInputs.cache
+C:\Users\ronin\source\repos\GeoTabTest - Copy\obj\Debug\geotabtest.esproj.CoreCompileInputs.cache
+C:\Users\ronin\source\repos\GeoTabTest - current\obj\Debug\geotabtest.esproj.CoreCompileInputs.cache
