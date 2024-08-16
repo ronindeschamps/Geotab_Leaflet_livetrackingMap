@@ -3,12 +3,9 @@
 
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="/leaflet/leaflet.css" />
-    <script src="/leaflet/leaflet.js"></script>
-
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/mg-api-js"></script>
-
 
     <style>
         #map {
@@ -20,43 +17,40 @@
 <body>
 
     <!-- leaflet map -->
-
-    <div id="map">
-
-    </div>
-
+    <div id="map"></div>
 
     <script type="text/javascript">
-
-        //create authentication object
-
+        // Create authentication object
         const authentication = {
             credentials: {
                 database: 'demo_test_data',
                 userName: 'ronindeschamps@gmail.com',
                 password: 'Kylesucks@pingpong420'
             },
-            path: 'preview.geotab.com'
-        }
+            path: 'https://preview.geotab.com'
+        };
 
-        //authentication to create the GeotabApi
-
+        // Authentication to create the GeotabApi
         const api = new GeotabApi(authentication);
 
         // Authenticate and log the result
-
         api.authenticate()
             .then(response => {
                 console.log('I have authenticated');
+                initMap(); // Initialize the map after authentication
+                loopWithPause(); // Start the loop after authentication
             })
             .catch(error => {
                 console.error('Authentication failed:', error);
             });
 
-        async function initmap() {
+        let map;
+        let layerGroup;
 
+        // Function to initialize the map
+        async function initMap() {
             const serial = "G90000000001";
-            var limoIcon = L.icon({
+            const limoIcon = L.icon({
                 iconUrl: '/images/limo-hero.png',
                 iconSize: [116.5, 55.8],
             });
@@ -70,15 +64,28 @@
                 });
 
                 if (result.length > 0) {
-                    initmaptolocation(result[0], limoIcon);
+                    const device = result[0];
+                    const location = await initDeviceLocation(device);
+
+                    map = L.map('map').setView(location, 13);
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(map);
+
+                    layerGroup = L.layerGroup().addTo(map);
+                    L.marker(location, { icon: limoIcon }).addTo(layerGroup);
                 } else {
                     console.error('Error: empty data');
                 }
             } catch (error) {
                 alert(error);
             }
+        }
 
-            function initmaptolocation(device, limoIcon) {
+        // Function to get device location
+        async function initDeviceLocation(device) {
+            return new Promise((resolve, reject) => {
                 api.call("Get", {
                     typeName: "DeviceStatusInfo",
                     search: {
@@ -88,27 +95,15 @@
                     }
                 }, function (result) {
                     if (result.length > 0) {
-
-                        var location = new L.LatLng(result[0].latitude, result[0].longitude);
-
-                        var map = L.map('map').setView(location, 13);
-
-                        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            maxZoom: 19,
-                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                        }).addTo(map);
-
-                        var marker = L.marker(location, { icon: limoIcon }).addTo(map);
-
-                        var layerGroup = L.layerGroup().addTo(map);
-
+                        const location = new L.LatLng(41, 41);
+                        resolve(location);
                     } else {
-                        alert("Location information not available for the inputted device");
+                        reject("Location information not available for the inputted device");
                     }
                 }, function (error) {
-                    alert(error);
+                    reject(error);
                 });
-            }
+            });
         }
 
         // Function to pause execution for a given number of milliseconds
@@ -117,9 +112,7 @@
         }
 
         // Function to retrieve and display device location
-        async function displayLocationLoop(serial, limoIcon) {
-
-
+        async function retrieveAndDisplayDeviceLocation(serial, limoIcon) {
             try {
                 const result = await api.call("Get", {
                     typeName: "Device",
@@ -149,15 +142,11 @@
                 }
             }, function (result) {
                 if (result.length > 0) {
-
-                    var location = new L.LatLng(result[0].latitude, result[0].longitude);
-
-                    var marker = L.marker(location, { icon: limoIcon }).addTo(map);
+                    const location = new L.LatLng(result[0].latitude, result[0].longitude);
+                    const marker = L.marker(location, { icon: limoIcon });
 
                     layerGroup.clearLayers().addLayer(marker);
-
-                    map.setView(location, 15);
-
+                    map.setView(location);
                 } else {
                     alert("Location information not available for the inputted device");
                 }
@@ -168,25 +157,17 @@
 
         // Loop to retrieve and display device location every 5 seconds
         async function loopWithPause() {
-
             const serial = "G90000000001";
-            var icon = L.icon({
+            const icon = L.icon({
                 iconUrl: '/images/limo-hero.png',
                 iconSize: [116.5, 55.8],
-
             });
+
             while (true) {
-                await displayLocationLoop(serial, icon);
+                await retrieveAndDisplayDeviceLocation(serial, icon);
                 await delay(5000); // Pause for 5 seconds
             }
         }
-
-        // initialize map
-        initmap();
-
-        // Start the loop
-        loopWithPause();
-
 
     </script>
 </body>

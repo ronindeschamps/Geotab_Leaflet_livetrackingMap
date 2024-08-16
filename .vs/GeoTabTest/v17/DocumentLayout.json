@@ -5,10 +5,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{55312BD6-5869-41B1-A078-5DB1E47A0287}|geotabtest.esproj|c:\\users\\ronin\\source\\repos\\geotabtest - current\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{55312BD6-5869-41B1-A078-5DB1E47A0287}|geotabtest.esproj|solutionrelative:index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{55312BD6-5869-41B1-A078-5DB1E47A0287}|geotabtest.esproj|c:\\users\\ronin\\source\\repos\\geotabtest - current\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
-      "RelativeMoniker": "D:0:0:{55312BD6-5869-41B1-A078-5DB1E47A0287}|geotabtest.esproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     }
   ],
   "DocumentGroupContainers": [
@@ -17,12 +13,16 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 271,
-          "SelectedChildIndex": 2,
+          "DockedWidth": 410,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
               "$type": "Bookmark",
@@ -36,7 +36,7 @@
               "RelativeDocumentMoniker": "index.html",
               "ToolTip": "C:\\Users\\ronin\\source\\repos\\GeoTabTest - current\\index.html",
               "RelativeToolTip": "index.html",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAAABkAAAAKAAAA",
+              "ViewState": "AQIAAIIAAAAAAAAAAAAuwJUAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2024-08-05T17:24:11.625Z",
               "EditorCaption": ""
@@ -44,25 +44,12 @@
           ]
         },
         {
-          "DockedWidth": 253,
-          "SelectedChildIndex": 1,
+          "DockedWidth": 114,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "README.md",
-              "DocumentMoniker": "C:\\Users\\ronin\\source\\repos\\GeoTabTest - current\\README.md",
-              "RelativeDocumentMoniker": "README.md",
-              "ToolTip": "C:\\Users\\ronin\\source\\repos\\GeoTabTest - current\\README.md",
-              "RelativeToolTip": "README.md",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2024-08-14T13:09:01.494Z",
-              "EditorCaption": ""
             }
           ]
         }
